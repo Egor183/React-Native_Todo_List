@@ -1,21 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, View, FlatList } from "react-native";
+import { AddTodo } from "./src/AddTodo";
+import { Navbar } from "./src/Navbar";
+import { Todo } from "./src/Todo";
 
 export default function App() {
+  const [todos, setTodos] = useState([]);
+
+  const addTodo = (title) => {
+    setTodos((prev) => [...prev, { id: Date.now().toString(), title }]);
+  };
+
+  const removeTodo = (id) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView>
+      <Navbar title="To do app" />
+      <View style={styles.container}>
+        <AddTodo addTodo={addTodo} />
+        <FlatList
+          data={todos}
+          renderItem={(item) => (
+            <Todo todo={item} keyExtractor={(item) => item.id.toString()} removeTodo={removeTodo} />
+          )}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 10,
   },
 });
