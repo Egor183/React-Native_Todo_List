@@ -4,10 +4,21 @@ import { ScrollView, StyleSheet, Text, View, FlatList, Alert } from "react-nativ
 import { Navbar } from "./src/components/Navbar";
 import { MainScreen } from "./src/screens/MainScreen";
 import { TodoScreen } from "./src/screens/TodoScreen";
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
+import { THEME } from "./src/theme";
+
+async function loadApplication() {
+  await Font.loadAsync({
+    "roboto-regular": require("./assets/fonts/Roboto-Regular.ttf"),
+    "roboto-bold": require("./assets/fonts/Roboto-Bold.ttf"),
+  });
+}
 
 export default function App() {
   const [todoId, setTodoId] = useState(null);
   const [todos, setTodos] = useState([]);
+  const [isReady, setIsReady] = useState(false);
 
   const addTodo = (title) => {
     setTodos((prev) => [...prev, { id: Date.now().toString(), title }]);
@@ -55,6 +66,12 @@ export default function App() {
     );
   }
 
+  if (!isReady) {
+    return (
+      <AppLoading startAsync={loadApplication} onError={(err) => console.log(err)} onFinish={() => setIsReady(true)} />
+    );
+  }
+
   return (
     <ScrollView>
       <Navbar title="To do app" />
@@ -65,6 +82,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: THEME.PADDING,
   },
 });

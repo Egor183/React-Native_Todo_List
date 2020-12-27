@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, Dimensions } from "react-native";
 import { EditModal } from "../components/EditModal";
+import { AppButton } from "../components/ui/AppButton";
 import { AppCard } from "../components/ui/AppCard";
+import { AppTextBold } from "../components/ui/AppTextBold";
 import { THEME } from "../theme";
+import { AntDesign } from "@expo/vector-icons";
 
 export const TodoScreen = ({ goBack, todo, removeTodo, onSave }) => {
   const [modal, SetModal] = useState(false);
@@ -12,18 +15,24 @@ export const TodoScreen = ({ goBack, todo, removeTodo, onSave }) => {
   };
   return (
     <View>
-      <Button title="back" onPress={goBack} color={THEME.GREY_COLOR} />
+      <AppButton onPress={goBack} color={THEME.GREY_COLOR} style={{ width: "20%", marginBottom: 20 }}>
+        <AntDesign name="back" size={24} />
+      </AppButton>
       <EditModal visible={modal} onCancel={() => SetModal(false)} value={todo.title} onSave={saveHandler} />
       <AppCard style={styles.card}>
-        <Text style={styles.text}>{todo.title}</Text>
+        <AppTextBold style={styles.text}>{todo.title}</AppTextBold>
       </AppCard>
 
       <View style={styles.buttons}>
         <View style={styles.button}>
-          <Button title="edit" color="green" onPress={() => SetModal(true)} />
+          <AppButton color="green" onPress={() => SetModal(true)}>
+            <AntDesign name="edit" size={24} />
+          </AppButton>
         </View>
         <View style={styles.button}>
-          <Button title="remove" color={THEME.RED_COLOR} style={styles.button} onPress={() => removeTodo(todo.id)} />
+          <AppButton color={THEME.RED_COLOR} onPress={() => removeTodo(todo.id)}>
+            <AntDesign name="delete" size={24} />
+          </AppButton>
         </View>
       </View>
     </View>
@@ -32,7 +41,7 @@ export const TodoScreen = ({ goBack, todo, removeTodo, onSave }) => {
 
 const styles = StyleSheet.create({
   buttons: { flexDirection: "row", justifyContent: "space-between" },
-  button: { width: "30%" },
+  button: { width: Dimensions.get("window").width / 6 },
   text: { fontSize: 20 },
   card: { marginBottom: 20, padding: 15 },
 });

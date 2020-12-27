@@ -1,14 +1,30 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Button, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, TextInput, Alert, Keyboard, Dimensions } from "react-native";
 import { THEME } from "../theme";
+import { Entypo } from "@expo/vector-icons";
 
 export const AddTodo = ({ addTodo }) => {
   const [value, setValue] = useState("");
+
+  const [deviceWidth, setDeviceWidth] = useState(Dimensions.get("window").width - THEME.PADDING * 2);
+
+  useEffect(() => {
+    const update = () => {
+      const width = Dimensions.get("window").width;
+      setDeviceWidth(width);
+    };
+    Dimensions.addEventListener("change", update);
+
+    return () => {
+      Dimensions.removeEventListener("change", update);
+    };
+  });
 
   const onSubmit = () => {
     if (value.trim()) {
       addTodo(value);
       setValue("");
+      Keyboard.dismiss();
     } else {
       Alert.alert("Please, write to do");
     }
@@ -17,13 +33,19 @@ export const AddTodo = ({ addTodo }) => {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={{
+          ...styles.input,
+          width: deviceWidth > 400 ? "80%" : "70%",
+        }}
         onChangeText={(text) => setValue(text)}
         value={value}
         placeholder="start write..."
         autoCorrect={false}
       />
-      <Button title="Add" onPress={onSubmit} />
+      <Entypo.Button onPress={onSubmit} name="add-to-list">
+        Add
+      </Entypo.Button>
+      {/* <Button title="Add" onPress={onSubmit} /> */}
     </View>
   );
 };
@@ -37,8 +59,6 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 5,
-    width: "80%",
-    borderStyle: "solid",
     borderBottomWidth: 2,
     borderColor: THEME.MAIN_COLOR,
   },
