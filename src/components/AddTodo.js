@@ -45,7 +45,6 @@ export const AddTodo = ({ addTodo }) => {
       <Entypo.Button onPress={onSubmit} name="add-to-list">
         Add
       </Entypo.Button>
-      {/* <Button title="Add" onPress={onSubmit} /> */}
     </View>
   );
 };
